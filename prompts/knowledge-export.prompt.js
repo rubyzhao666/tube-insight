@@ -82,4 +82,6 @@ export const KNOWLEDGE_EXPORT_PROMPT = `
 - 标签自动从视频内容中提炼，格式为 #标签名
 - 下一步行动要具体可执行，基于视频实际内容生成
 - 整合时注意去除重复内容，保持信息密度
+- 如果产品情报中的 content_type 为 methodology，把「🔍 产品情报」章节改为「🧭 核心方法论」，下设「核心方法论」「关键原则」「可迁移场景」「方法论关键词」四个小节，分别使用 core_methodologies、key_principles、application_scenarios、methodology_keywords 的内容
+- 如果行业洞察中包含「技术边界」，在「💡 关键洞察」章节末尾增加「技术边界」小节，每条写明技术名称、已实现能力和当前边界
 `;

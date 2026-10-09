@@ -10,8 +10,9 @@ export const MULTI_VIDEO_COMPARE_PROMPT = `
 【视频数据】
 {videos_data}
 
-（数据格式说明：每个视频包含 title 标题、summary 摘要、product_features 功能点、
-user_pain_points 痛点、business_model_keywords 商业关键词）
+（数据格式说明：每个视频包含 title 标题、summary 摘要、content_type 内容类型、product_features 功能点、
+user_pain_points 痛点、business_model_keywords 商业关键词、core_methodologies 核心方法论。
+content_type 为 product 表示产品相关视频；为 methodology 表示非产品视频，此时请重点对比 core_methodologies）
 
 【输出要求】
 请按照以下 Markdown 格式输出完整的对比报告：

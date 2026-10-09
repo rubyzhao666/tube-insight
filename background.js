@@ -1186,17 +1186,23 @@ function normalizeProductIntelligence(value) {
       .filter((item) => typeof item === "string" && item.trim())
       .slice(0, 5)
       .map((item) => item.trim().slice(0, 500));
-  const oneLineSummary =
-    typeof value?.one_line_summary === "string"
-      ? value.one_line_summary.trim().slice(0, 1000)
-      : "";
+  const safeString = (input, maxLength) =>
+    typeof input === "string" ? input.trim().slice(0, maxLength) : "";
+  const contentType =
+    value?.content_type === "methodology" ? "methodology" : "product";
 
   return {
+    content_type: contentType,
+    content_type_reason: safeString(value?.content_type_reason, 500),
     product_features: safeList(value?.product_features),
     user_pain_points: safeList(value?.user_pain_points),
     competitor_info: safeList(value?.competitor_info),
     business_model_keywords: safeList(value?.business_model_keywords),
-    one_line_summary: oneLineSummary,
+    core_methodologies: safeList(value?.core_methodologies),
+    key_principles: safeList(value?.key_principles),
+    application_scenarios: safeList(value?.application_scenarios),
+    methodology_keywords: safeList(value?.methodology_keywords),
+    one_line_summary: safeString(value?.one_line_summary, 1000),
   };
 }
 
@@ -1269,11 +1275,24 @@ function normalizeIndustryInsights(value) {
     .filter((item) => typeof item === "string" && item.trim())
     .slice(0, 3)
     .map((item) => item.trim().slice(0, 1000));
+  const techBoundaries = (
+    Array.isArray(value?.tech_boundaries) ? value.tech_boundaries : []
+  )
+    .slice(0, 5)
+    .map((item) => ({
+      topic: safeString(item?.topic, 200),
+      speaker: safeString(item?.speaker, 200) || "视频作者",
+      current_capability: safeString(item?.current_capability, 1000),
+      boundary: safeString(item?.boundary, 1000),
+      outlook: safeString(item?.outlook, 1000),
+    }))
+    .filter((item) => item.topic && (item.current_capability || item.boundary));
 
   return {
     terms,
     key_insights: keyInsights,
     pm_relevance: pmRelevance,
+    tech_boundaries: techBoundaries,
   };
 }
 
@@ -1460,9 +1479,12 @@ function normalizeComparisonVideos(videos) {
   return videos.map((video, index) => ({
     title: safeString(video?.title, 500) || `视频 ${index + 1}`,
     summary: safeString(video?.summary, 20_000) || "未提及",
+    content_type:
+      video?.content_type === "methodology" ? "methodology" : "product",
     product_features: safeList(video?.product_features),
     user_pain_points: safeList(video?.user_pain_points),
     business_model_keywords: safeList(video?.business_model_keywords),
+    core_methodologies: safeList(video?.core_methodologies),
   }));
 }
 

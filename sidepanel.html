@@ -258,12 +258,23 @@
             </div>
 
             <div id="intelligenceResults" style="display: none">
+              <div class="intelligence-type" id="intelligenceType">
+                <span
+                  class="intelligence-type-badge"
+                  id="intelligenceTypeBadge"
+                ></span>
+                <span
+                  class="intelligence-type-reason"
+                  id="intelligenceTypeReason"
+                ></span>
+              </div>
+
               <div
                 class="intelligence-summary"
                 id="intelligenceSummary"
               ></div>
 
-              <div class="intelligence-grid">
+              <div class="intelligence-grid" id="productIntelligenceGrid">
                 <article class="intelligence-card">
                   <div class="intelligence-card-header">
                     <h3>产品功能点</h3>
@@ -323,6 +334,71 @@
                   ></div>
                 </article>
               </div>
+
+              <div
+                class="intelligence-grid"
+                id="methodologyGrid"
+                style="display: none"
+              >
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>核心方法论</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="core_methodologies"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <ul id="coreMethodologiesList"></ul>
+                </article>
+
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>关键原则</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="key_principles"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <ul id="keyPrinciplesList"></ul>
+                </article>
+
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>可迁移场景</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="application_scenarios"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <ul id="applicationScenariosList"></ul>
+                </article>
+
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>方法论关键词</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="methodology_keywords"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <div
+                    class="intelligence-keywords"
+                    id="methodologyKeywordsList"
+                  ></div>
+                </article>
+              </div>
             </div>
 
             <section class="prd-section" id="prdSection" style="display: none">
@@ -373,8 +449,49 @@
 
             <div id="insightsResults" style="display: none">
               <section class="pm-relevance-card">
-                <h3>For PM</h3>
-                <ul id="pmRelevanceList"></ul>
+                <div class="pm-relevance-header">
+                  <h3>For PM</h3>
+                  <div
+                    class="pm-branch-tabs"
+                    role="tablist"
+                    aria-label="For PM 分类"
+                  >
+                    <button
+                      class="pm-branch-tab active"
+                      id="pmBranchTabInsights"
+                      type="button"
+                      role="tab"
+                      aria-selected="true"
+                      aria-controls="pmRelevanceList"
+                      data-pm-branch="insights"
+                    >
+                      产品洞察
+                    </button>
+                    <button
+                      class="pm-branch-tab"
+                      id="pmBranchTabBoundaries"
+                      type="button"
+                      role="tab"
+                      aria-selected="false"
+                      aria-controls="techBoundariesList"
+                      data-pm-branch="boundaries"
+                    >
+                      技术边界
+                    </button>
+                  </div>
+                </div>
+                <ul
+                  id="pmRelevanceList"
+                  role="tabpanel"
+                  aria-labelledby="pmBranchTabInsights"
+                ></ul>
+                <div
+                  class="tech-boundaries-list"
+                  id="techBoundariesList"
+                  role="tabpanel"
+                  aria-labelledby="pmBranchTabBoundaries"
+                  hidden
+                ></div>
               </section>
 
               <section class="insights-content-section">

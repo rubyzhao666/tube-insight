@@ -520,6 +520,9 @@ function setupEventListeners() {
   document.querySelectorAll(".intelligence-copy-btn").forEach((button) => {
     button.addEventListener("click", () => copyIntelligenceCard(button));
   });
+  document.querySelectorAll(".pm-branch-tab").forEach((tab) => {
+    tab.addEventListener("click", () => selectPmBranch(tab.dataset.pmBranch));
+  });
 }
 
 function setNotesFilter(showAll) {
@@ -1726,6 +1729,23 @@ const PRODUCT_INTELLIGENCE_LISTS = Object.freeze({
   business_model_keywords: "businessModelKeywordsList",
 });
 
+const METHODOLOGY_LISTS = Object.freeze({
+  core_methodologies: "coreMethodologiesList",
+  key_principles: "keyPrinciplesList",
+  application_scenarios: "applicationScenariosList",
+  methodology_keywords: "methodologyKeywordsList",
+});
+
+const INTELLIGENCE_KEYWORD_KEYS = new Set([
+  "business_model_keywords",
+  "methodology_keywords",
+]);
+
+// Results cached before content-type detection have no content_type field.
+function isMethodologyIntelligence(intelligence) {
+  return intelligence?.content_type === "methodology";
+}
+
 function setProductIntelligenceStatus(message, type = "") {
   const status = document.getElementById("intelligenceStatus");
   if (!status) return;
@@ -1749,16 +1769,33 @@ function renderProductIntelligence(intelligence) {
   const summary = document.getElementById("intelligenceSummary");
   if (!results || !summary) return;
 
-  summary.textContent =
-    intelligence.one_line_summary || "视频中未提炼出明确的产品价值总结。";
+  const isMethodology = isMethodologyIntelligence(intelligence);
+  const typeBadge = document.getElementById("intelligenceTypeBadge");
+  const typeReason = document.getElementById("intelligenceTypeReason");
+  const productGrid = document.getElementById("productIntelligenceGrid");
+  const methodologyGrid = document.getElementById("methodologyGrid");
+  if (typeBadge) {
+    typeBadge.textContent = isMethodology ? "非产品视频 · 方法论" : "产品相关视频";
+    typeBadge.classList.toggle("methodology", isMethodology);
+  }
+  if (typeReason) typeReason.textContent = intelligence.content_type_reason || "";
+  if (productGrid) productGrid.style.display = isMethodology ? "none" : "";
+  if (methodologyGrid) methodologyGrid.style.display = isMethodology ? "" : "none";
 
-  Object.entries(PRODUCT_INTELLIGENCE_LISTS).forEach(([key, elementId]) => {
+  summary.textContent =
+    intelligence.one_line_summary ||
+    (isMethodology
+      ? "视频中未提炼出明确的核心方法论。"
+      : "视频中未提炼出明确的产品价值总结。");
+
+  const lists = isMethodology ? METHODOLOGY_LISTS : PRODUCT_INTELLIGENCE_LISTS;
+  Object.entries(lists).forEach(([key, elementId]) => {
     const container = document.getElementById(elementId);
     if (!container) return;
     container.innerHTML = "";
     const items = Array.isArray(intelligence[key]) ? intelligence[key] : [];
 
-    if (key === "business_model_keywords") {
+    if (INTELLIGENCE_KEYWORD_KEYS.has(key)) {
       if (!items.length) {
         const empty = document.createElement("span");
         empty.className = "intelligence-empty";
@@ -1988,8 +2025,72 @@ function renderIndustryInsights(insights) {
     });
   }
 
+  renderTechBoundaries(insights);
   setIndustryInsightsStatus("");
   results.style.display = "block";
+}
+
+function renderTechBoundaries(insights) {
+  const list = document.getElementById("techBoundariesList");
+  if (!list) return;
+  list.replaceChildren();
+
+  // Results cached before this branch existed have no tech_boundaries field.
+  if (!Array.isArray(insights.tech_boundaries)) {
+    appendInsightsEmpty(list, "点击「重新分析」以提取技术边界。");
+    return;
+  }
+  if (!insights.tech_boundaries.length) {
+    appendInsightsEmpty(list, "视频中未讨论具体的技术能力或技术边界。");
+    return;
+  }
+
+  const rows = [
+    ["current_capability", "已实现"],
+    ["boundary", "当前边界"],
+    ["outlook", "突破判断"],
+  ];
+  insights.tech_boundaries.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "tech-boundary-item";
+    const header = document.createElement("div");
+    header.className = "tech-boundary-header";
+    const topic = document.createElement("span");
+    topic.className = "tech-boundary-topic";
+    topic.textContent = item.topic;
+    const speaker = document.createElement("span");
+    speaker.className = "tech-boundary-speaker";
+    speaker.textContent = item.speaker || "视频作者";
+    header.append(topic, speaker);
+    card.appendChild(header);
+
+    rows.forEach(([key, label]) => {
+      if (!item[key]) return;
+      const row = document.createElement("div");
+      row.className = `tech-boundary-row ${key}`;
+      const rowLabel = document.createElement("span");
+      rowLabel.className = "tech-boundary-label";
+      rowLabel.textContent = label;
+      const value = document.createElement("span");
+      value.textContent = item[key];
+      row.append(rowLabel, value);
+      card.appendChild(row);
+    });
+    list.appendChild(card);
+  });
+}
+
+function selectPmBranch(branch) {
+  const showBoundaries = branch === "boundaries";
+  document.querySelectorAll(".pm-branch-tab").forEach((tab) => {
+    const active = tab.dataset.pmBranch === branch;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+  });
+  const pmRelevanceList = document.getElementById("pmRelevanceList");
+  const techBoundariesList = document.getElementById("techBoundariesList");
+  if (pmRelevanceList) pmRelevanceList.hidden = showBoundaries;
+  if (techBoundariesList) techBoundariesList.hidden = !showBoundaries;
 }
 
 async function triggerIndustryInsights(force = false) {
@@ -3022,9 +3123,12 @@ function normalizeStoredCompareLibrary(value) {
         typeof item.summary === "string"
           ? item.summary.slice(0, 20_000)
           : "",
+      content_type:
+        item.content_type === "methodology" ? "methodology" : "product",
       product_features: normalizeList(item.product_features),
       user_pain_points: normalizeList(item.user_pain_points),
       business_model_keywords: normalizeList(item.business_model_keywords),
+      core_methodologies: normalizeList(item.core_methodologies),
       addedAt: Number.isFinite(Number(item.addedAt))
         ? Number(item.addedAt)
         : Date.now(),
@@ -3154,6 +3258,12 @@ async function syncCurrentVideoCompareEntry() {
     business_model_keywords: currentProductIntelligence
       ? intelligence.business_model_keywords || []
       : previousEntry.business_model_keywords,
+    content_type: currentProductIntelligence
+      ? intelligence.content_type
+      : previousEntry.content_type,
+    core_methodologies: currentProductIntelligence
+      ? intelligence.core_methodologies || []
+      : previousEntry.core_methodologies,
   };
   compareLibrary = compareLibrary.map((entry, entryIndex) =>
     entryIndex === index ? updatedEntry : entry,
@@ -3222,6 +3332,8 @@ async function addCurrentVideoToCompare() {
       product_features: intelligence.product_features || [],
       user_pain_points: intelligence.user_pain_points || [],
       business_model_keywords: intelligence.business_model_keywords || [],
+      content_type: intelligence.content_type,
+      core_methodologies: intelligence.core_methodologies || [],
       addedAt: Date.now(),
     }];
     libraryWasMutated = true;
@@ -3410,8 +3522,27 @@ function formatIndustryInsightsForExport(insights) {
   if (Array.isArray(insights.pm_relevance) && insights.pm_relevance.length) {
     sections.push(
       "",
-      "对 PM 最相关：",
+      "For PM · 产品洞察：",
       ...insights.pm_relevance.map((item) => `- ${item}`),
+    );
+  }
+  if (
+    Array.isArray(insights.tech_boundaries) &&
+    insights.tech_boundaries.length
+  ) {
+    sections.push(
+      "",
+      "For PM · 技术边界：",
+      ...insights.tech_boundaries.map((item) =>
+        [
+          `- ${item.topic}（${item.speaker || "视频作者"}）`,
+          item.current_capability && `  - 已实现：${item.current_capability}`,
+          item.boundary && `  - 当前边界：${item.boundary}`,
+          item.outlook && `  - 突破判断：${item.outlook}`,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      ),
     );
   }
   return sections.join("\n").trim();
@@ -3473,13 +3604,37 @@ function buildLocalKnowledgeMarkdown({
     Array.isArray(items) && items.length
       ? items.map((item) => `- ${item}`).join("\n")
       : missing;
-  const keywords =
-    Array.isArray(intelligence.business_model_keywords) &&
-    intelligence.business_model_keywords.length
-      ? intelligence.business_model_keywords
+  const tags = (items) =>
+    Array.isArray(items) && items.length
+      ? items
           .map((keyword) => `#${String(keyword).replace(/\s+/g, "")}`)
           .join(" ")
       : missing;
+  const intelligenceSection = isMethodologyIntelligence(intelligence)
+    ? `## 核心方法论
+### 核心方法论
+${list(intelligence.core_methodologies)}
+
+### 关键原则
+${list(intelligence.key_principles)}
+
+### 可迁移场景
+${list(intelligence.application_scenarios)}
+
+### 方法论关键词
+${tags(intelligence.methodology_keywords)}`
+    : `## 产品情报
+### 核心功能点
+${list(intelligence.product_features)}
+
+### 用户痛点
+${list(intelligence.user_pain_points)}
+
+### 竞品信息
+${list(intelligence.competitor_info)}
+
+### 商业关键词
+${tags(intelligence.business_model_keywords)}`;
 
   return `# ${videoTitle || "未命名视频"}
 
@@ -3494,18 +3649,7 @@ ${intelligence.one_line_summary || missing}
 ## 内容摘要
 ${aiSummary || missing}
 
-## 产品情报
-### 核心功能点
-${list(intelligence.product_features)}
-
-### 用户痛点
-${list(intelligence.user_pain_points)}
-
-### 竞品信息
-${list(intelligence.competitor_info)}
-
-### 商业关键词
-${keywords}
+${intelligenceSection}
 
 ## PRD 草稿
 ${prdContent || missing}

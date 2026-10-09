@@ -5,7 +5,7 @@
 export const INSIGHT_EXTRACTOR_PROMPT = `
 你是一名 AI 行业分析师，熟悉人工智能、产品、科技领域的专业术语和行业动态。
 
-请基于以下 YouTube 视频字幕内容，完成两项分析任务。
+请基于以下 YouTube 视频字幕内容，完成三项分析任务。
 
 【字幕内容】
 {transcript}
@@ -15,6 +15,10 @@ export const INSIGHT_EXTRACTOR_PROMPT = `
 
 【任务二：核心观点提炼】
 提炼视频中各发言人（或视频作者）表达的核心观点。
+
+【任务三：技术边界】
+提取视频中人物提到的技术能力：这项技术现在已经能做到什么、是如何实现的，以及目前的局限和边界在哪里。
+如果发言人谈到了突破边界的时间判断或方向，也一并提取。
 
 【输出要求】
 请严格按照以下 JSON 格式输出：
@@ -39,6 +43,15 @@ export const INSIGHT_EXTRACTOR_PROMPT = `
     "与产品经理工作最相关的洞察1",
     "与产品经理工作最相关的洞察2",
     "与产品经理工作最相关的洞察3"
+  ],
+  "tech_boundaries": [
+    {
+      "topic": "技术或能力名称（保留原文）",
+      "speaker": "提到该技术的发言人名称或「视频作者」",
+      "current_capability": "目前已经能实现什么、如何实现（一句话，60字以内）",
+      "boundary": "当前的局限或技术边界（一句话，60字以内）",
+      "outlook": "发言人对突破边界的判断或方向（一句话，如未提及则为空字符串）"
+    }
   ]
 }
 
@@ -47,5 +60,7 @@ export const INSIGHT_EXTRACTOR_PROMPT = `
 - terms 最多输出 10 个最重要的术语
 - key_insights 最多输出 8 条核心观点
 - pm_relevance 固定输出 3 条，专门筛选对 AI 产品经理最有价值的内容
+- tech_boundaries 最多输出 5 条，必须来自视频中人物的实际讲述，不要补充视频之外的技术常识
+- 如果视频没有讨论具体技术能力或边界，tech_boundaries 返回空数组 []
 - JSON 格式必须合法，可以被 JSON.parse() 正确解析
 `;

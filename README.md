@@ -27,16 +27,16 @@ Whether you are researching products, tracking industry trends, learning a techn
 
 ### Product intelligence and PRD
 
-- **Intel** extracts product features, user pain points, competitors, and business-model keywords.
+- **Intel** first detects whether a video is about a product. Product videos yield features, user pain points, competitors, and business-model keywords; interviews and other non-product videos yield core methodologies, key principles, transferable scenarios, and methodology keywords.
 - Review structured intelligence cards and copy each category independently.
-- Generate a PRD draft with goals, target users, user stories, core features, and acceptance criteria.
+- Generate a PRD draft with goals, target users, user stories, core features, and acceptance criteria. For non-product videos, the draft turns the core methodology into a product concept.
 - Render and copy the complete PRD as Markdown.
 
 ### Industry insights
 
 - **Insights** identifies important AI, technology, and product terminology with concise explanations.
 - Organize viewpoints as “speaker → core insight.”
-- Highlight the findings most relevant to product managers.
+- **For PM** has two tabs: Product insights highlight the findings most relevant to product managers, and Technical boundaries summarize the capabilities speakers describe, how they work, their current limits, and expected breakthroughs.
 
 ### Multi-video comparison
 

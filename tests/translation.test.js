@@ -544,12 +544,44 @@ test("product intelligence output is bounded to the supported card schema", () =
   assert.deepEqual(
     JSON.parse(JSON.stringify(normalized)),
     {
+      content_type: "product",
+      content_type_reason: "",
       product_features: ["A", "B", "C", "D", "E"],
       user_pain_points: [],
       competitor_info: ["Competitor"],
       business_model_keywords: ["SaaS", "B2B"],
+      core_methodologies: [],
+      key_principles: [],
+      application_scenarios: [],
+      methodology_keywords: [],
       one_line_summary: "Summary",
     },
+  );
+});
+
+test("non-product videos keep methodology cards and unknown types fall back to product", () => {
+  const { normalizeProductIntelligence } = loadBackgroundHelpers();
+  const methodology = normalizeProductIntelligence({
+    content_type: "methodology",
+    content_type_reason: " 人物访谈，没有具体产品 ",
+    core_methodologies: ["长期主义训练：每天固定训练", ""],
+    key_principles: ["1", "2", "3", "4", "5", "6"],
+    application_scenarios: ["团队复盘"],
+    methodology_keywords: ["纪律"],
+    one_line_summary: "纪律来自系统而不是意志力",
+  });
+
+  assert.equal(methodology.content_type, "methodology");
+  assert.equal(methodology.content_type_reason, "人物访谈，没有具体产品");
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(methodology.core_methodologies)),
+    ["长期主义训练：每天固定训练"],
+  );
+  assert.equal(methodology.key_principles.length, 5);
+  assert.deepEqual(JSON.parse(JSON.stringify(methodology.product_features)), []);
+  assert.equal(
+    normalizeProductIntelligence({ content_type: "other" }).content_type,
+    "product",
   );
 });
 
@@ -570,6 +602,21 @@ test("industry insights are bounded and malformed entries are removed", () => {
       { speaker: "A", insight: "" },
     ],
     pm_relevance: ["洞察1", "洞察2", "洞察3", "洞察4"],
+    tech_boundaries: [
+      {
+        topic: "AI dubbing",
+        speaker: "",
+        current_capability: "可以保留原声音色完成多语言配音",
+        boundary: "情绪和口型同步仍需人工校对",
+        outlook: "",
+      },
+      { topic: "", current_capability: "missing topic" },
+      { topic: "No detail", current_capability: "", boundary: "" },
+      ...Array.from({ length: 5 }, (_, index) => ({
+        topic: `T${index}`,
+        boundary: "边界",
+      })),
+    ],
   });
 
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), {
@@ -585,7 +632,61 @@ test("industry insights are bounded and malformed entries are removed", () => {
       },
     ],
     pm_relevance: ["洞察1", "洞察2", "洞察3"],
+    tech_boundaries: [
+      {
+        topic: "AI dubbing",
+        speaker: "视频作者",
+        current_capability: "可以保留原声音色完成多语言配音",
+        boundary: "情绪和口型同步仍需人工校对",
+        outlook: "",
+      },
+      {
+        topic: "T0",
+        speaker: "视频作者",
+        current_capability: "",
+        boundary: "边界",
+        outlook: "",
+      },
+      {
+        topic: "T1",
+        speaker: "视频作者",
+        current_capability: "",
+        boundary: "边界",
+        outlook: "",
+      },
+    ],
   });
+});
+
+test("Intel methodology cards and For PM technical boundaries are wired end to end", () => {
+  const html = read("sidepanel.html");
+  const sidepanel = read("sidepanel.js");
+  const intelPrompt = read("prompts/product-intelligence.prompt.js");
+  const insightPrompt = read("prompts/insight-extractor.prompt.js");
+
+  assert.match(intelPrompt, /"content_type": "product 或 methodology"/);
+  assert.match(intelPrompt, /"core_methodologies"/);
+  assert.match(insightPrompt, /"tech_boundaries"/);
+  assert.match(read("prompts/prd-generator.prompt.js"), /content_type 为 methodology/);
+
+  for (const id of [
+    "intelligenceTypeBadge",
+    "methodologyGrid",
+    "coreMethodologiesList",
+    "keyPrinciplesList",
+    "applicationScenariosList",
+    "methodologyKeywordsList",
+    "techBoundariesList",
+  ]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(
+    html,
+    /data-pm-branch="insights"[\s\S]*产品洞察[\s\S]*data-pm-branch="boundaries"[\s\S]*技术边界/,
+  );
+  assert.match(sidepanel, /function renderTechBoundaries\(insights\)/);
+  assert.match(sidepanel, /For PM · 技术边界：/);
+  assert.match(sidepanel, /isMethodologyIntelligence\(intelligence\)\s*\?\s*`## 核心方法论/);
 });
 
 test("multi-video comparison enforces its size and data bounds", () => {
@@ -602,22 +703,28 @@ test("multi-video comparison enforces its size and data bounds", () => {
       title: "",
       summary: "",
       user_pain_points: "invalid",
+      content_type: "methodology",
+      core_methodologies: ["复盘法"],
     },
   ]);
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), [
     {
       title: "视频 A",
       summary: "摘要 A",
+      content_type: "product",
       product_features: ["1", "2", "3", "4", "5"],
       user_pain_points: [],
       business_model_keywords: [],
+      core_methodologies: [],
     },
     {
       title: "视频 2",
       summary: "未提及",
+      content_type: "methodology",
       product_features: [],
       user_pain_points: [],
       business_model_keywords: [],
+      core_methodologies: ["复盘法"],
     },
   ]);
 });
