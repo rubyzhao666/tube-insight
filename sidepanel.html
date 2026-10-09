@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TubeInsight</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <!-- Note: the panel's own "TubeInsight" title is shown by Chrome's side-panel
+         title bar, so we don't repeat a logo here. -->
+    <div class="header">
+      <div class="header-top">
+        <!-- Video info -->
+        <div class="video-info" id="videoInfo" style="display: none">
+          <div class="video-title" id="videoTitle"></div>
+          <div class="video-channel" id="videoChannel"></div>
+        </div>
+        <div class="header-actions">
+          <button
+            class="settings-btn"
+            id="settingsBtn"
+            type="button"
+            title="Open TubeInsight settings"
+            aria-label="Open TubeInsight settings"
+          >
+            Settings
+          </button>
+          <div
+            class="transcript-mode-control global-language-control"
+            id="transcriptModeControl"
+            role="group"
+            aria-label="Content language"
+            style="display: none"
+          >
+            <button
+              class="transcript-mode-btn active"
+              type="button"
+              data-transcript-mode="original"
+              aria-pressed="true"
+            >Original</button>
+            <button
+              class="transcript-mode-btn"
+              type="button"
+              data-transcript-mode="zh"
+              aria-pressed="false"
+            >中文</button>
+            <button
+              class="transcript-mode-btn"
+              type="button"
+              data-transcript-mode="bilingual"
+              aria-pressed="false"
+            >双语</button>
+            <span
+              class="translation-spinner"
+              id="langSpinner"
+              aria-label="Translating"
+            ></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab navigation -->
+      <div class="tabs" id="tabsNav" style="display: none">
+        <button class="tab active" data-tab="transcript">Transcript</button>
+        <button class="tab" data-tab="overview">Overview</button>
+        <button class="tab" data-tab="intelligence">Intel</button>
+        <button class="tab" data-tab="insights">Insights</button>
+        <button class="tab" data-tab="compare">Compare</button>
+        <button class="tab" data-tab="notes">Notes</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content" id="contentArea">
+      <!-- WELCOME STATE -->
+      <div id="welcomeState" class="welcome-container">
+        <div class="welcome-icon" aria-hidden="true"></div>
+        <div class="welcome-title">Ready for TubeInsight</div>
+        <div class="welcome-desc">
+          Navigate to a YouTube video and click the extension icon to get an
+          AI-powered insight.
+        </div>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div id="loadingState" style="display: none">
+        <div class="loading-container">
+          <div class="loading-bar"></div>
+          <div class="loading-text" id="loadingText">Fetching transcript</div>
+          <div class="loading-subtext" id="loadingSubtext">
+            Extracting captions from video...
+          </div>
+        </div>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div id="errorState" style="display: none">
+        <div class="error-container">
+          <div class="error-icon" aria-hidden="true">!</div>
+          <div class="error-title" id="errorTitle">Error</div>
+          <div class="error-message" id="errorMessage">
+            Something went wrong.
+          </div>
+          <button class="error-btn" id="errorBtn">Try Again</button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="resultsState" style="display: none">
+        <!-- TAB: Transcript (default - no LLM required) -->
+        <div class="tab-panel active" data-panel="transcript">
+          <div class="section">
+            <div class="section-header transcript-section-header">
+              <div class="section-title">Full Transcript</div>
+              <div class="transcript-actions">
+                <button class="enhance-btn" id="copyTranscriptBtn">Copy</button>
+                <button class="enhance-btn" id="exportTranscriptBtn">
+                  Export
+                </button>
+              </div>
+            </div>
+            <!-- Search stays inside the Transcript tab and never changes playback. -->
+            <div class="transcript-search" role="search">
+              <svg
+                class="transcript-search-icon"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
+                <circle cx="8.5" cy="8.5" r="5.5"></circle>
+                <path d="m12.5 12.5 4 4"></path>
+              </svg>
+              <input
+                class="transcript-search-input"
+                id="transcriptSearchInput"
+                type="search"
+                placeholder="Search words or phrases"
+                aria-label="Search transcript"
+                aria-controls="transcriptList"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                class="transcript-search-clear"
+                id="transcriptSearchClearBtn"
+                type="button"
+                aria-label="Clear transcript search"
+                title="Clear search"
+                hidden
+              >
+                &times;
+              </button>
+              <output
+                class="transcript-search-count"
+                id="transcriptSearchCount"
+                aria-live="polite"
+              ></output>
+              <div
+                class="transcript-search-nav"
+                role="group"
+                aria-label="Search results"
+              >
+                <button
+                  id="transcriptSearchPrevBtn"
+                  type="button"
+                  aria-label="Previous transcript match"
+                  title="Previous match (Shift + Enter)"
+                  disabled
+                >
+                  &#8593;
+                </button>
+                <button
+                  id="transcriptSearchNextBtn"
+                  type="button"
+                  aria-label="Next transcript match"
+                  title="Next match (Enter)"
+                  disabled
+                >
+                  &#8595;
+                </button>
+              </div>
+            </div>
+            <div id="transcriptList"></div>
+          </div>
+        </div>
+
+        <!-- TAB: Overview (chapters + key quotes) - requires LLM -->
+        <div class="tab-panel" data-panel="overview">
+          <!-- Chapters -->
+          <div class="section">
+            <div class="section-title">Chapters</div>
+            <ul class="chapter-list" id="chapterList">
+              <li
+                class="chapter-item"
+                style="
+                  color: var(--text-muted);
+                  cursor: default;
+                  border-color: var(--border);
+                "
+              >
+                Chapters will appear here
+              </li>
+            </ul>
+          </div>
+
+          <!-- Key Quotes -->
+          <div class="section">
+            <div class="section-title">Key Quotes</div>
+            <div id="quotesList">
+              <div
+                class="quote-item"
+                style="
+                  color: var(--text-muted);
+                  border-left-color: var(--border);
+                  cursor: default;
+                "
+              >
+                <div class="quote-text" style="font-style: normal">
+                  Quotes will be extracted when you view this tab...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Product Intelligence -->
+        <div class="tab-panel" data-panel="intelligence">
+          <div class="section">
+            <div class="section-header intelligence-header">
+              <div class="section-title">产品情报雷达</div>
+              <div class="intelligence-header-actions">
+                <button
+                  class="enhance-btn"
+                  id="refreshIntelligenceBtn"
+                  type="button"
+                >
+                  重新分析
+                </button>
+                <button
+                  class="enhance-btn intelligence-primary-btn"
+                  id="generatePrdBtn"
+                  type="button"
+                  disabled
+                >
+                  生成 PRD 草稿
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="intelligence-status"
+              id="intelligenceStatus"
+              role="status"
+              aria-live="polite"
+            >
+              打开此页后，将基于当前视频字幕自动提炼产品情报。
+            </div>
+
+            <div id="intelligenceResults" style="display: none">
+              <div
+                class="intelligence-summary"
+                id="intelligenceSummary"
+              ></div>
+
+              <div class="intelligence-grid">
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>产品功能点</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="product_features"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <ul id="productFeaturesList"></ul>
+                </article>
+
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>用户痛点</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="user_pain_points"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <ul id="userPainPointsList"></ul>
+                </article>
+
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>竞品信息</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="competitor_info"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <ul id="competitorInfoList"></ul>
+                </article>
+
+                <article class="intelligence-card">
+                  <div class="intelligence-card-header">
+                    <h3>商业模式关键词</h3>
+                    <button
+                      class="intelligence-copy-btn"
+                      type="button"
+                      data-intelligence-key="business_model_keywords"
+                    >
+                      复制
+                    </button>
+                  </div>
+                  <div
+                    class="intelligence-keywords"
+                    id="businessModelKeywordsList"
+                  ></div>
+                </article>
+              </div>
+            </div>
+
+            <section class="prd-section" id="prdSection" style="display: none">
+              <div class="section-header">
+                <div class="section-title">PRD 草稿</div>
+                <button
+                  class="enhance-btn"
+                  id="copyPrdBtn"
+                  type="button"
+                >
+                  复制 Markdown
+                </button>
+              </div>
+              <div
+                class="intelligence-status"
+                id="prdStatus"
+                role="status"
+                aria-live="polite"
+                style="display: none"
+              ></div>
+              <article class="prd-content" id="prdContent"></article>
+            </section>
+          </div>
+        </div>
+
+        <!-- TAB: Industry Insights -->
+        <div class="tab-panel" data-panel="insights">
+          <div class="section">
+            <div class="section-header insights-header">
+              <div class="section-title">行业洞察与观点提炼</div>
+              <button
+                class="enhance-btn"
+                id="refreshInsightsBtn"
+                type="button"
+              >
+                重新分析
+              </button>
+            </div>
+
+            <div
+              class="insights-status"
+              id="insightsStatus"
+              role="status"
+              aria-live="polite"
+            >
+              打开此页后，将自动识别行业术语并提炼核心观点。
+            </div>
+
+            <div id="insightsResults" style="display: none">
+              <section class="pm-relevance-card">
+                <h3>For PM</h3>
+                <ul id="pmRelevanceList"></ul>
+              </section>
+
+              <section class="insights-content-section">
+                <div class="section-title">行业术语</div>
+                <div class="insight-terms-list" id="insightTermsList"></div>
+              </section>
+
+              <section class="insights-content-section">
+                <div class="section-title">核心观点</div>
+                <div class="key-insights-list" id="keyInsightsList"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Multi-video Compare -->
+        <div class="tab-panel" data-panel="compare">
+          <div class="section">
+            <div class="section-header compare-header">
+              <div class="section-title">多视频对比分析</div>
+              <button
+                class="enhance-btn compare-add-btn"
+                id="addToCompareBtn"
+                type="button"
+              >
+                Add to Compare
+              </button>
+            </div>
+
+            <div
+              class="compare-status"
+              id="compareStatus"
+              role="status"
+              aria-live="polite"
+              style="display: none"
+            ></div>
+
+            <div class="compare-library-toolbar">
+              <span id="compareLibraryCount">对比库 0/10</span>
+              <button
+                class="compare-clear-btn"
+                id="clearCompareLibraryBtn"
+                type="button"
+                disabled
+              >
+                清空
+              </button>
+            </div>
+            <div class="compare-library-list" id="compareLibraryList"></div>
+
+            <button
+              class="compare-generate-btn"
+              id="generateCompareReportBtn"
+              type="button"
+              disabled
+            >
+              生成对比报告
+            </button>
+
+            <section
+              class="compare-report-section"
+              id="compareReportSection"
+              style="display: none"
+            >
+              <div class="section-header">
+                <div class="section-title">对比报告</div>
+                <button
+                  class="enhance-btn"
+                  id="copyCompareReportBtn"
+                  type="button"
+                >
+                  复制 Markdown
+                </button>
+              </div>
+              <article
+                class="prd-content compare-report-content"
+                id="compareReportContent"
+              ></article>
+            </section>
+          </div>
+        </div>
+
+        <!-- TAB: Notes -->
+        <div class="tab-panel" data-panel="notes">
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">Saved Notes</div>
+              <div class="notes-header-actions">
+                <button
+                  class="enhance-btn"
+                  id="exportKnowledgeBtn"
+                  type="button"
+                >
+                  导出
+                </button>
+                <div class="notes-filter">
+                  <button
+                    class="enhance-btn active"
+                    id="notesFilterThis"
+                    aria-pressed="true"
+                  >
+                    This Video
+                  </button>
+                  <button
+                    class="enhance-btn"
+                    id="notesFilterAll"
+                    aria-pressed="false"
+                  >
+                    All Notes
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="knowledge-export-status"
+              id="knowledgeExportStatus"
+              role="status"
+              aria-live="polite"
+              style="display: none"
+            ></div>
+            <p class="notes-intro" id="notesIntro">
+              Move your mouse over the video and click Note to save a
+              timestamped note, or press the "n" key while the video is focused.
+            </p>
+            <div id="notesList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auto-scroll follow button — appears when user scrolls away from playback position -->
+    <button
+      class="follow-playback-btn"
+      id="followPlaybackBtn"
+      style="display: none"
+    >
+      Follow playback
+    </button>
+
+    <script src="settings.js"></script>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
