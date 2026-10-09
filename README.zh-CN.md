@@ -2,75 +2,83 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-把每个 YouTube 视频变成一份可以深入学习的资料。TubeInsight 把字幕、双语翻译、AI 概览、内容讲解和时间戳笔记放进同一个 Chrome 侧边栏，让你可以持续学习视频中的知识和语言，同时不丢失原视频上下文。
+> 把 YouTube 视频转化为可阅读、可分析、可比较、可沉淀的知识资产。
 
-- 把零碎字幕变成清晰、可搜索的学习资料。
-- 查看原文、简体中文翻译，或中英双语对照字幕来学习语言。
-- 通过 AI 概览、章节、重点引用和选中文本讲解建立系统理解。
-- 点击字幕、概览或笔记中的时间戳，快速跳转到对应位置。
-- 保存自动润色的时间戳笔记，方便之后复习。
-- 使用自己的 API Key，数据保存在本地 Chrome 中，不包含分析统计或行为追踪。
+TubeInsight 是一款运行在 Chrome 侧边栏中的 YouTube AI 研究助手。它围绕视频字幕建立完整的信息处理流程，将双语阅读、AI 概览、产品情报、行业洞察、PRD 草稿、多视频对比、时间戳笔记和 Markdown 导出集中在一个工作空间中。
 
-TubeInsight 是一个需要自行提供 API Key 的开源项目，通过 GitHub 安装。目前没有上架 Chrome 应用商店，不赠送 API 额度，也没有开发者运营的服务器。
+无论你在研究产品、跟踪行业趋势、学习专业知识，还是整理视频资料，TubeInsight 都能帮助你减少反复拖动进度条和手工摘录，把长视频快速转化为结构化成果。
 
 点击查看演示和教学视频（小白友好）：[https://www.bilibili.com/video/BV1dnuq6dEak/](https://www.bilibili.com/video/BV1dnuq6dEak/)
 
 ![TubeInsight 双语演示](YouTube%20Digest%20demo%20bilingual.png)
 
-## v1.2.0 更新
+## 核心能力
 
-- 搜索字幕中的单词或短语，并依次查看所有匹配位置。
-- 在 Transcript、Overview 和 Notes 中共用 Original、中文和双语设置。新视频默认保持 Original，不会自动消耗翻译 token。
-- 只翻译当前可见的 Overview 和 Notes 内容，并通过小批次渐进显示和缓存结果。
-- 选中字幕后，可以直接讲解内容或保存带时间戳的笔记。
-- 页面跳转后保留字幕阅读位置，并在离开 YouTube 视频页面时自动关闭侧边栏。
+### 字幕阅读与双语学习
 
-## 二创新功能
+- 提取带时间戳的 YouTube 原生字幕，并按完整语义重新组织内容。
+- 支持 Original、中文和双语对照三种阅读模式。
+- 支持字幕全文搜索、匹配跳转和跟随视频播放。
+- 点击任意时间戳即可回到视频对应位置。
 
-### 产品情报雷达
+### AI 概览与内容理解
 
-打开侧边栏顶部的「Intel」标签页，TubeInsight 会使用 DeepSeek
-分析当前视频字幕，并提炼产品功能点、用户痛点、竞品信息和商业模式关键词。
-四类结果分别显示为结构化卡片，支持单独复制。分析结果会随当前视频缓存在
-Chrome 本地存储中；点击「重新分析」可以刷新结果。
+- 自动生成视频章节、关键时刻和重点引用。
+- 选中字幕即可获取结合上下文的 AI 讲解。
+- 概览、字幕和笔记共享语言模式，翻译结果按需生成并缓存。
 
-### PRD 素材生成器
+### 产品情报与 PRD
 
-产品情报生成后，可在「情报」标签页点击「生成 PRD 草稿」。草稿包含背景与
-目标、目标用户、3 条用户故事、核心功能列表、验收标准和待确认问题，并在
-侧边栏中按 Markdown 标题、表格、列表和任务项展示。「复制 Markdown」可复制
-完整源文，生成结果同样按视频保存在 Chrome 本地缓存中。
-
-### 知识库导出
-
-在 Notes 标签页点击「导出」，TubeInsight 会将当前视频的 AI 摘要、产品
-情报、PRD 草稿、行业洞察和笔记整合为 Markdown 知识卡片。尚未生成的模块会
-明确标注「本次未生成」。文件使用 `视频标题_YYYY-MM-DD.md` 命名，并通过
-Chrome 下载到本地，可直接使用 Obsidian、Typora 等 Markdown 工具打开。
+- **Intel** 从字幕中提炼产品功能、用户痛点、竞品信息和商业模式关键词。
+- 情报以结构化卡片呈现，每类内容均可独立复制。
+- 基于视频内容生成包含背景目标、目标用户、用户故事、核心功能和验收标准的 PRD 草稿。
+- PRD 支持 Markdown 渲染和一键复制。
 
 ### 行业洞察与观点提炼
 
-打开「洞察」标签页，TubeInsight 会识别字幕中的 AI、科技和产品专业术语。
-点击术语即可展开中文解释和分类。页面还会按“发言人 → 核心观点”展示视频
-观点，并单独高亮对 AI 产品经理最有价值的 3 条内容。洞察结果按视频缓存在
-Chrome 本地存储中，并自动包含在后续知识库导出文件里。
+- **Insights** 自动识别 AI、科技和产品领域的专业术语，点击即可查看中文解释。
+- 按“发言人 → 核心观点”的方式梳理视频观点。
+- 单独呈现对产品经理最有价值的内容，帮助快速判断业务相关性。
 
 ### 多视频对比分析
 
-在「对比」标签页可将当前视频的 AI 摘要和产品情报加入本地对比库。对比库
-最多保存 10 个视频，显示标题和加入时间，并支持单条删除或一键清空。收藏
-至少 2 个视频后，可以生成包含视频概览、横向矩阵、共同趋势、差异化亮点和
-产品经理行动建议的 Markdown 报告，并一键复制完整 Markdown。
+- **Compare** 可将最多 10 个视频加入本地对比库。
+- 横向比较核心功能、用户痛点、技术方案和商业模式。
+- 自动总结共同趋势、差异化亮点和可执行的产品行动建议。
+
+### 笔记与知识库导出
+
+- 保存带时间戳的笔记，并通过 AI 自动整理表达。
+- 将视频摘要、产品情报、PRD、行业洞察和个人笔记整合为 Markdown 知识卡片。
+- 文件按 `视频标题_YYYY-MM-DD.md` 自动命名，可直接在 Obsidian、Typora 等工具中使用。
+
+## 从视频到知识资产
+
+1. 打开带原生字幕的 YouTube 视频。
+2. 在 **Transcript** 阅读、搜索或翻译字幕。
+3. 在 **Overview** 建立对视频结构和重点内容的整体理解。
+4. 使用 **Intel**、**Insights** 和 **Compare** 完成产品与行业研究。
+5. 在 **Notes** 保存观点，并将完整分析结果导出为 Markdown。
+
+## 产品特点
+
+- **侧边栏工作流**：分析过程不离开 YouTube 页面，视频与资料始终保持同步。
+- **结构化输出**：重要结果以卡片、列表、表格和 Markdown 文档呈现。
+- **本地优先**：设置、笔记、缓存和对比库保存在 Chrome 本地存储。
+- **自带 API Key**：直接连接 Supadata 和 DeepSeek，不经过开发者中转服务器。
+- **隐私透明**：无账号系统、无广告、无分析统计、无行为追踪。
+
+TubeInsight 是一个通过 GitHub 分发的开源项目，目前未上架 Chrome 应用商店，也不附带第三方 API 额度。
 
 ## 让你的编程 Agent 帮你安装
 
 你不需要看懂代码，也不需要会使用命令行。把下面这段话发送给你的编程 Agent：
 
-> 请把这个项目下载或克隆到我选择的长期保留文件夹，告诉我准确的完整路径，并让 Chrome“加载已解压的扩展程序”使用同一个文件夹。如果我在第一次安装时需要位置建议，可以推荐 macOS 或 Linux 上的 `~/Documents/youtube-digest`，或 Windows 上的 `%USERPROFILE%\Documents\youtube-digest`，但不要假设我一定使用这些路径。请用简单易懂的语言一步一步指导我完成安装和配置。https://github.com/zarazhangrui/youtube-digest
+> 请把这个项目下载或克隆到我选择的长期保留文件夹，告诉我准确的完整路径，并让 Chrome“加载已解压的扩展程序”使用同一个文件夹。如果我在第一次安装时需要位置建议，可以推荐 macOS 或 Linux 上的 `~/Documents/tube-insight`，或 Windows 上的 `%USERPROFILE%\Documents\tube-insight`，但不要假设我一定使用这些路径。请用简单易懂的语言一步一步指导我完成安装和配置。https://github.com/rubyzhao666/tube-insight
 
 你的 Agent 应该帮你：
 
-1. 先询问你想把项目长期保存在哪里，再下载或克隆到那里，并告诉你准确的完整路径。如果你需要建议，可以推荐 macOS 或 Linux 上的 `~/Documents/youtube-digest`，或 Windows 上的 `%USERPROFILE%\Documents\youtube-digest`。
+1. 先询问你想把项目长期保存在哪里，再下载或克隆到那里，并告诉你准确的完整路径。如果你需要建议，可以推荐 macOS 或 Linux 上的 `~/Documents/tube-insight`，或 Windows 上的 `%USERPROFILE%\Documents\tube-insight`。
 2. 打开下方 Supadata 和 DeepSeek 官方页面，指导你创建自己的账号。
 3. 指导你在 Chrome 中通过“加载已解压的扩展程序”选择你刚才确定的那个准确项目文件夹。
 4. 告诉你应该在扩展的“设置”页面哪个位置填写 API Key。
@@ -84,9 +92,9 @@ Chrome 本地存储中，并自动包含在后续知识库导出文件里。
 
 如果你想自己操作：
 
-1. 打开 [github.com/zarazhangrui/youtube-digest](https://github.com/zarazhangrui/youtube-digest)。
+1. 打开 [github.com/rubyzhao666/tube-insight](https://github.com/rubyzhao666/tube-insight)。
 2. 点击 **Code**，再选择 **Download ZIP**。
-3. 选择一个长期保留的文件夹，并把项目解压到这里。可选建议是 macOS 或 Linux 上的 `~/Documents/youtube-digest`，或 Windows 上的 `%USERPROFILE%\Documents\youtube-digest`。你也可以使用其他文件夹。
+3. 选择一个长期保留的文件夹，并把项目解压到这里。可选建议是 macOS 或 Linux 上的 `~/Documents/tube-insight`，或 Windows 上的 `%USERPROFILE%\Documents\tube-insight`。你也可以使用其他文件夹。
 4. 在 Chrome 地址栏打开 `chrome://extensions`。
 5. 打开右上角的“开发者模式”。
 6. 点击“加载已解压的扩展程序”。
@@ -192,11 +200,11 @@ DeepSeek 的额度与 Supadata 分开计算。TubeInsight 不收款，也不转�
 
 低值假设大部分重复输入命中 DeepSeek 缓存，高值假设输入未命中缓存。翻译按需执行并复用缓存，只翻译部分视频时费用会更低。使用前请查看官方页面确认最新价格。
 
-## 用编程 Agent 改造成自己的版本
+## 使用编程 Agent 扩展 TubeInsight
 
-这是一个个人 Remix 项目，不接受上游 Issue 或 Pull Request。如果功能出错，或者你想增加新功能，请下载或 Fork 自己的副本，再让你的编程 Agent 帮你修复、改造和个性化。
+TubeInsight 使用原生 HTML、CSS 和 JavaScript，没有构建步骤，便于阅读、调试和扩展。你可以 Fork 项目，并让编程 Agent 根据自己的工作流继续开发。
 
-TubeInsight 使用原生 HTML、CSS 和 JavaScript，没有构建步骤，很适合用编程 Agent 做个人项目。你可以尝试：
+可以尝试：
 
 - 增加更多翻译语言，并让每个人选择自己的学习语言。
 - 为课程、访谈、教程、测评或研究视频增加自定义总结模板。
@@ -223,7 +231,7 @@ TubeInsight 没有账号系统、广告、分析统计或行为追踪。Supadata
 
 ## 常见问题
 
-### YouTube 视频页面没有显示 Digest 按钮
+### YouTube 视频页面没有显示 TubeInsight 按钮
 
 - 在 `chrome://extensions` 中找到 TubeInsight，点击“重新加载”，然后刷新 YouTube 页面。
 - 确认当前页面是标准 `https://www.youtube.com/watch?...` 页面，而不是 Shorts、嵌入页面或直播页面。

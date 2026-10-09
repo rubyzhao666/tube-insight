@@ -2,36 +2,81 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-Turn every YouTube video into a resource for deep learning. TubeInsight brings transcripts, bilingual translation, AI overviews, explanations, and timestamped notes into one Chrome side panel, so you can study ideas and language without losing your place.
+> Turn YouTube videos into knowledge that is readable, analyzable, comparable, and reusable.
 
-- Turn captions into a readable, searchable learning resource.
-- Learn languages with the original transcript, a Simplified Chinese translation, or an aligned bilingual view.
-- Build understanding with an AI overview, chapters, key quotes, and selected-text explanations.
-- Navigate long videos by clicking timestamps in the transcript, overview, or notes.
-- Save polished timestamped notes for later study.
-- Keep control of your data with your own API keys, local Chrome storage, and no analytics or telemetry.
+TubeInsight is an AI research assistant that runs in Chrome's side panel. It builds a complete information workflow around YouTube transcripts, bringing bilingual reading, AI overviews, product intelligence, industry insights, PRD drafts, multi-video comparison, timestamped notes, and Markdown export into one workspace.
 
-TubeInsight is a bring-your-own-key project installed locally from GitHub. It is not available through the Chrome Web Store, does not include API credits, and does not run a developer-operated server.
+Whether you are researching products, tracking industry trends, learning a technical subject, or organizing video sources, TubeInsight reduces manual scrubbing and note-taking and turns long videos into structured deliverables.
 
 ![TubeInsight demo](YouTube%20Digest%20demo.png)
 
-## New in v1.2.0
+## Core capabilities
 
-- Search transcript words or phrases and move through every match.
-- Use one Original, Chinese, or bilingual setting across Transcript, Overview, and Notes. New videos stay in Original by default.
-- Translate visible Overview and Notes content progressively in small cached batches.
-- Explain selected transcript text or save it directly as a timestamped note.
-- Keep your transcript position across navigation, with the panel closing automatically outside YouTube video pages.
+### Transcript reading and bilingual learning
+
+- Retrieve timestamped native YouTube captions and reorganize them into readable semantic segments.
+- Switch between Original, Chinese, and aligned bilingual views.
+- Search the full transcript, move between matches, and follow video playback.
+- Click any timestamp to return to the corresponding moment.
+
+### AI overview and contextual understanding
+
+- Generate chapters, key moments, and representative quotes.
+- Select transcript text for an AI explanation grounded in nearby context.
+- Share one language mode across overview, transcript, and notes, with lazy cached translation.
+
+### Product intelligence and PRD
+
+- **Intel** extracts product features, user pain points, competitors, and business-model keywords.
+- Review structured intelligence cards and copy each category independently.
+- Generate a PRD draft with goals, target users, user stories, core features, and acceptance criteria.
+- Render and copy the complete PRD as Markdown.
+
+### Industry insights
+
+- **Insights** identifies important AI, technology, and product terminology with concise explanations.
+- Organize viewpoints as “speaker → core insight.”
+- Highlight the findings most relevant to product managers.
+
+### Multi-video comparison
+
+- **Compare** stores up to 10 videos in a local comparison library.
+- Compare features, pain points, technical approaches, and business models.
+- Generate shared trends, differentiated strengths, and actionable product recommendations.
+
+### Notes and knowledge export
+
+- Save timestamped notes and polish their wording with AI.
+- Combine summaries, product intelligence, PRD content, industry insights, and personal notes into one Markdown knowledge card.
+- Export files as `video-title_YYYY-MM-DD.md` for tools such as Obsidian and Typora.
+
+## From video to knowledge
+
+1. Open a YouTube video with native captions.
+2. Read, search, or translate it in **Transcript**.
+3. Use **Overview** to understand the structure and key ideas.
+4. Research products and markets with **Intel**, **Insights**, and **Compare**.
+5. Save findings in **Notes** and export the complete analysis to Markdown.
+
+## Product principles
+
+- **Side-panel workflow**: keep the video and research workspace together.
+- **Structured output**: present results as cards, lists, tables, and Markdown documents.
+- **Local-first storage**: keep settings, notes, caches, and comparison data in Chrome local storage.
+- **Bring your own keys**: connect directly to Supadata and DeepSeek without a developer-operated proxy.
+- **Transparent privacy**: no account system, advertising, analytics, or behavioral tracking.
+
+TubeInsight is an open-source project distributed through GitHub. It is not currently available in the Chrome Web Store and does not include third-party API credits.
 
 ## Install with your coding agent
 
 You do not need to understand the code or use the command line. Send this message to your coding agent:
 
-> Download or clone this project into a permanent folder I choose, tell me its exact full path, and use that same folder for Chrome's Load unpacked step. If I need a suggestion during this first installation, offer `~/Documents/youtube-digest` on macOS or Linux, or `%USERPROFILE%\Documents\youtube-digest` on Windows, but do not assume either path. Walk me through installation and setup in simple terms. https://github.com/zarazhangrui/youtube-digest
+> Download or clone this project into a permanent folder I choose, tell me its exact full path, and use that same folder for Chrome's Load unpacked step. If I need a suggestion during this first installation, offer `~/Documents/tube-insight` on macOS or Linux, or `%USERPROFILE%\Documents\tube-insight` on Windows, but do not assume either path. Walk me through installation and setup in simple terms. https://github.com/rubyzhao666/tube-insight
 
 Your agent should:
 
-1. Ask where you want to keep the project, download or clone it there, and tell you the exact full path. If you want a suggestion, it can offer `~/Documents/youtube-digest` on macOS or Linux, or `%USERPROFILE%\Documents\youtube-digest` on Windows.
+1. Ask where you want to keep the project, download or clone it there, and tell you the exact full path. If you want a suggestion, it can offer `~/Documents/tube-insight` on macOS or Linux, or `%USERPROFILE%\Documents\tube-insight` on Windows.
 2. Open the official Supadata and DeepSeek pages below and help you create your own accounts.
 3. Walk you through selecting the exact project folder you chose in Chrome with **Load unpacked**.
 4. Show you where to enter your API keys in the extension's **Settings** page.
@@ -45,9 +90,9 @@ Never paste an API key into an AI chat, source file, screenshot, or public messa
 
 If you prefer to do it yourself:
 
-1. Open [github.com/zarazhangrui/youtube-digest](https://github.com/zarazhangrui/youtube-digest).
+1. Open [github.com/rubyzhao666/tube-insight](https://github.com/rubyzhao666/tube-insight).
 2. Choose **Code**, then **Download ZIP**.
-3. Choose a permanent folder and unzip the project there. Optional suggestions are `~/Documents/youtube-digest` on macOS or Linux, or `%USERPROFILE%\Documents\youtube-digest` on Windows. You may use a different folder.
+3. Choose a permanent folder and unzip the project there. Optional suggestions are `~/Documents/tube-insight` on macOS or Linux, or `%USERPROFILE%\Documents\tube-insight` on Windows. You may use a different folder.
 4. In Chrome, open `chrome://extensions`.
 5. Turn on **Developer mode**.
 6. Click **Load unpacked**.
@@ -153,11 +198,11 @@ A measured 20-minute English talk used about **32,600 input tokens** and an esti
 
 The lower end assumes most repeated input hits DeepSeek's cache. The upper end assumes cache misses. Translation is lazy and cached, so translating only part of a video costs less. Check the official page before relying on these prices.
 
-## Remix it with your coding agent
+## Extend TubeInsight with a coding agent
 
-This is a personal remix project. Upstream issues and pull requests are not accepted. If something breaks or you want a new feature, download or fork your own copy and ask your coding agent to fix, remix, or personalize it for you.
+TubeInsight uses plain HTML, CSS, and JavaScript with no build step, making it straightforward to read, debug, and extend. Fork the project and ask your coding agent to adapt it to your workflow.
 
-TubeInsight uses plain HTML, CSS, and JavaScript with no build step, so it is a friendly starting point for agent-assisted projects. Ideas to try:
+Ideas to try:
 
 - Add more translation languages and let each person choose a learning language.
 - Create customized summary templates for lectures, interviews, tutorials, reviews, or research talks.

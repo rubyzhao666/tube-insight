@@ -42,13 +42,13 @@ test("release copy documents current scope without em dashes", () => {
   assert.match(readme, /^# TubeInsight$/m);
   assert.match(
     readme,
-    /Turn every YouTube video into a resource for deep learning\./,
+    /Turn YouTube videos into knowledge that is readable, analyzable, comparable, and reusable\./,
   );
   assert.doesNotMatch(readme, /before deciding how much of it to watch/i);
   assert.match(readme, /^## Install with your coding agent$/m);
   assert.match(
     readme,
-    /permanent folder I choose[\s\S]*tell me its exact full path[\s\S]*If I need a suggestion during this first installation[\s\S]*`~\/Documents\/youtube-digest`[\s\S]*`%USERPROFILE%\\Documents\\youtube-digest`[\s\S]*do not assume either path/,
+    /permanent folder I choose[\s\S]*tell me its exact full path[\s\S]*If I need a suggestion during this first installation[\s\S]*`~\/Documents\/tube-insight`[\s\S]*`%USERPROFILE%\\Documents\\tube-insight`[\s\S]*do not assume either path/,
   );
   assert.match(
     readme,
@@ -62,14 +62,15 @@ test("release copy documents current scope without em dashes", () => {
     readme,
     /Select the exact project folder you chose, which must contain `manifest\.json`/,
   );
-  assert.match(readme, /upstream issues and pull requests are not accepted/i);
   assert.doesNotMatch(readme, /^## Contributing$/m);
   assert.match(chineseReadme, /^# TubeInsight$/m);
-  assert.match(chineseReadme, /把每个 YouTube 视频变成一份可以深入学习的资料/);
+  assert.match(chineseReadme, /把 YouTube 视频转化为可阅读、可分析、可比较、可沉淀的知识资产/);
+  assert.doesNotMatch(chineseReadme, /二创|二次创作/);
+  assert.doesNotMatch(readme, /personal remix project/i);
   assert.match(chineseReadme, /^## 让你的编程 Agent 帮你安装$/m);
   assert.match(
     chineseReadme,
-    /我选择的长期保留文件夹[\s\S]*告诉我准确的完整路径[\s\S]*第一次安装时需要位置建议[\s\S]*`~\/Documents\/youtube-digest`[\s\S]*`%USERPROFILE%\\Documents\\youtube-digest`[\s\S]*不要假设我一定使用这些路径/,
+    /我选择的长期保留文件夹[\s\S]*告诉我准确的完整路径[\s\S]*第一次安装时需要位置建议[\s\S]*`~\/Documents\/tube-insight`[\s\S]*`%USERPROFILE%\\Documents\\tube-insight`[\s\S]*不要假设我一定使用这些路径/,
   );
   assert.match(
     chineseReadme,
@@ -83,7 +84,6 @@ test("release copy documents current scope without em dashes", () => {
     chineseReadme,
     /选择你刚才确定的那个准确项目文件夹，其中必须包含 `manifest\.json`/,
   );
-  assert.match(chineseReadme, /不接受上游 Issue 或 Pull Request/);
   assert.match(chineseReadme, /增加更多翻译语言/);
 
   assert.match(readme, /100 credits per month/i);
@@ -120,7 +120,7 @@ test("release copy documents current scope without em dashes", () => {
   assert.match(readme, /^### The TubeInsight button is missing on a YouTube video$/m);
   assert.match(
     chineseReadme,
-    /^### YouTube 视频页面没有显示 Digest 按钮$/m,
+    /^### YouTube 视频页面没有显示 TubeInsight 按钮$/m,
   );
 
   const optionsPage = read("options.html");
@@ -161,7 +161,7 @@ test("release copy documents current scope without em dashes", () => {
   assert.ok(optionsPage.includes(`>${customizationPrompt}</textarea>`));
   assert.doesNotMatch(customizationPrompt, /Documents|USERPROFILE/);
 
-  assert.match(readme, /^## Remix it with your coding agent$/m);
+  assert.match(readme, /^## Extend TubeInsight with a coding agent$/m);
   assert.match(readme, /more translation languages/i);
   assert.match(readme, /customized summary templates/i);
   assert.match(readme, /vocabulary notebook/i);
