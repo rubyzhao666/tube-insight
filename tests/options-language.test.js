@@ -36,7 +36,15 @@ test("Settings copy covers English and Simplified Chinese", () => {
   assert.equal(options.translate("zh-CN", "saveSettings"), "保存设置");
   assert.equal(
     options.translate("zh-CN", "clearedDigests", { count: 2 }),
-    "已清除 2 条缓存摘要。",
+    "已清除 2 条 AI 结果缓存。",
+  );
+  assert.equal(
+    options.translate("en", "localRemix"),
+    "Customize TubeInsight",
+  );
+  assert.equal(
+    options.translate("zh-CN", "localRemix"),
+    "自定义 TubeInsight",
   );
 
   assert.deepEqual(
@@ -54,6 +62,7 @@ test("Settings copy covers English and Simplified Chinese", () => {
   }
   assert.doesNotMatch(JSON.stringify(options.COPY), /—/);
   assert.doesNotMatch(html, /—/);
+  assert.doesNotMatch(html, /Local remix|cached digests|Digests,/i);
 });
 
 test("language preference persists through extension-compatible storage", async () => {

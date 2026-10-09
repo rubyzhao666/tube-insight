@@ -158,7 +158,7 @@ Keys and settings are stored in Chrome's local extension storage on your device.
 - Native subtitle tracks returned by Supadata. TubeInsight prefers English when available, but may show another native language.
 - Original, Simplified Chinese, and aligned bilingual transcript views.
 - AI overviews, selected-text explanations, translation, and automatic note polishing.
-- Local notes and a local cache for recent transcript and digest results.
+- Local notes and a local cache for recent transcripts and AI analysis results.
 - DeepSeek V4 Flash for all published AI features. Other providers require a local code adaptation and are not supported by this published version.
 
 Shorts, live streams, private or access-restricted videos, and videos without an available native transcript may not work. Firefox, Safari, mobile browsers, and other Chromium browsers are not currently tested or supported.
@@ -212,7 +212,7 @@ Ideas to try:
 - Add optional local-model support for a different privacy and cost tradeoff.
 - Improve accessibility with keyboard navigation, font controls, and higher-contrast themes.
 
-Ask your agent to preserve the bring-your-own-key model, keep secrets out of source files, run the checks below, and test the remix on real videos.
+Ask your agent to preserve the bring-your-own-key model, keep secrets out of source files, run the checks below, and test the customized version on real videos.
 
 If you want another AI provider or model, first open the exact TubeInsight project folder that Chrome loaded through **Load unpacked** in your coding agent. Then open TubeInsight Settings and use **Copy customization prompt**. Replace the `[PROVIDER]` and `[MODEL]` placeholders before sending it. Do not include any API key in the prompt or chat. After the agent updates your local copy, enter the key yourself in the Settings field it identifies.
 

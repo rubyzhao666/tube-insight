@@ -18,7 +18,7 @@ Depending on the feature you use, TubeInsight handles:
 - product intelligence, industry insights, PRD drafts, and knowledge exports you generate;
 - video summaries you add to the local comparison library and comparison reports;
 - Supadata and DeepSeek configuration, including API keys; and
-- cached transcript, digest, and translation results.
+- cached transcript, AI analysis, and translation results.
 
 ## Where data goes
 
@@ -52,7 +52,7 @@ TubeInsight uses Chrome's local extension storage, not a TubeInsight cloud servi
 
 - Supadata and DeepSeek settings and API keys remain on the device in Chrome's extension storage.
 - Saved notes remain until you delete them or remove/clear the extension's data. The extension keeps up to 100 notes.
-- Recent transcript, digest, and per-segment translation cache entries are stored
+- Recent transcript, AI analysis, and per-segment translation cache entries are stored
   locally. The cache is limited to 20 videos, and entries older than 30 days are
   removed when the side panel opens.
 - The comparison library stores up to 10 selected video summaries locally until
@@ -63,7 +63,7 @@ Chrome extension storage is not a password vault. Anyone with sufficient access 
 To remove data:
 
 - delete individual saved notes in TubeInsight;
-- use the Options page to clear cached digests, delete all notes, or reset all extension data;
+- use the Options page to clear cached AI results, delete all notes, or reset all TubeInsight data;
 - remove the extension or clear its stored data from Chrome to delete all local settings, keys, notes, and cache entries; and
 - revoke keys in the Supadata or DeepSeek dashboard to stop their future use.
 

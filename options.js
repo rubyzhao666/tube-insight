@@ -27,7 +27,7 @@ const YTD_OPTIONS = (() => {
       privacyNote:
         "When you use AI features, DeepSeek receives the video transcript and relevant video context. Review DeepSeek's terms and pricing before saving.",
       saveSettings: "Save settings",
-      localRemix: "Local remix",
+      localRemix: "Customize TubeInsight",
       customizationTitle: "Want to use another AI model?",
       customizationPurpose: "Edit and copy a safe prompt for your coding agent",
       agentBadge: "Coding agent ready",
@@ -48,10 +48,10 @@ const YTD_OPTIONS = (() => {
       copyCustomizationPrompt: "Copy edited prompt",
       localData: "Local data",
       localDataHelp:
-        "Digests, translations, and notes are stored only in this Chrome profile. You can remove them at any time.",
-      clearCache: "Clear cached digests",
+        "AI results, translations, and notes are stored only in this Chrome profile. You can remove them at any time.",
+      clearCache: "Clear cached AI results",
       deleteNotes: "Delete all notes",
-      resetData: "Reset extension data",
+      resetData: "Reset TubeInsight data",
       footer:
         'Read <a href="PRIVACY.md" target="_blank">PRIVACY.md</a> in the repository for the complete data-flow description.',
       migrationWarning:
@@ -66,10 +66,10 @@ const YTD_OPTIONS = (() => {
       copyFailed:
         "Could not copy the prompt. Select the prompt text and copy it manually.",
       clearedDigests: ({ count }) =>
-        `Cleared ${count} cached digest${count === 1 ? "" : "s"}.`,
+        `Cleared ${count} cached AI result${count === 1 ? "" : "s"}.`,
       notesDeleted: "Deleted all saved notes.",
       resetConfirm:
-        "Delete API keys, cached digests, translations, and saved notes from this Chrome profile?",
+        "Delete API keys, cached AI results, translations, and saved notes from this Chrome profile?",
       allDataDeleted: "All TubeInsight data was deleted.",
       settingsLoadFailed:
         "Could not load saved settings. You can still preview this page.",
@@ -96,7 +96,7 @@ const YTD_OPTIONS = (() => {
       privacyNote:
         "使用 AI 功能时，DeepSeek 会收到视频字幕及相关视频上下文。保存前请查看 DeepSeek 的服务条款和价格。",
       saveSettings: "保存设置",
-      localRemix: "本地改造",
+      localRemix: "自定义 TubeInsight",
       customizationTitle: "想使用其他 AI 模型？",
       customizationPurpose: "编辑并复制一段可安全交给编程 Agent 的提示词",
       agentBadge: "可交给编程 Agent",
@@ -116,10 +116,10 @@ const YTD_OPTIONS = (() => {
       copyCustomizationPrompt: "复制编辑后的提示词",
       localData: "本地数据",
       localDataHelp:
-        "摘要、翻译和笔记仅保存在当前 Chrome 个人资料中。你可以随时删除。",
-      clearCache: "清除缓存的摘要",
+        "AI 分析结果、翻译和笔记仅保存在当前 Chrome 个人资料中。你可以随时删除。",
+      clearCache: "清除 AI 结果缓存",
       deleteNotes: "删除全部笔记",
-      resetData: "重置扩展数据",
+      resetData: "重置 TubeInsight 数据",
       footer:
         '完整数据流说明请参阅仓库中的 <a href="PRIVACY.md" target="_blank">PRIVACY.md</a>。',
       migrationWarning:
@@ -132,10 +132,10 @@ const YTD_OPTIONS = (() => {
       copying: "正在复制…",
       promptCopied: "已复制编辑后的提示词。",
       copyFailed: "无法复制提示词。请选中提示词文本并手动复制。",
-      clearedDigests: ({ count }) => `已清除 ${count} 条缓存摘要。`,
+      clearedDigests: ({ count }) => `已清除 ${count} 条 AI 结果缓存。`,
       notesDeleted: "已删除全部已保存的笔记。",
       resetConfirm:
-        "要从当前 Chrome 个人资料中删除 API 密钥、缓存摘要、翻译和已保存的笔记吗？",
+        "要从当前 Chrome 个人资料中删除 API 密钥、AI 结果缓存、翻译和已保存的笔记吗？",
       allDataDeleted: "已删除全部 TubeInsight 数据。",
       settingsLoadFailed: "无法加载已保存的设置，但你仍可预览此页面。",
     },

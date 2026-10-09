@@ -133,7 +133,7 @@ test("release copy documents current scope without em dashes", () => {
   const detailsTag = optionsPage.match(
     /<details\b[^>]*class="card customization-card"[^>]*>/,
   );
-  assert.ok(detailsTag, "Expected a native Local remix details disclosure");
+  assert.ok(detailsTag, "Expected a native customization details disclosure");
   assert.doesNotMatch(detailsTag[0], /\sopen(?:\s|=|>)/i);
   assert.match(
     optionsPage,
