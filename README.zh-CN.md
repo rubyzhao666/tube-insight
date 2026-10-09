@@ -10,7 +10,7 @@ TubeInsight 是一款运行在 Chrome 侧边栏中的 YouTube AI 研究助手。
 
 点击查看演示和教学视频（小白友好）：[https://www.bilibili.com/video/BV1dnuq6dEak/](https://www.bilibili.com/video/BV1dnuq6dEak/)
 
-![TubeInsight 双语演示](YouTube%20Digest%20demo%20bilingual.png)
+![TubeInsight 最新功能界面](TubeInsight-demo.png)
 
 ## 核心能力
 

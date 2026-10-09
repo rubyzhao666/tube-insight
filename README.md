@@ -8,7 +8,7 @@ TubeInsight is an AI research assistant that runs in Chrome's side panel. It bui
 
 Whether you are researching products, tracking industry trends, learning a technical subject, or organizing video sources, TubeInsight reduces manual scrubbing and note-taking and turns long videos into structured deliverables.
 
-![TubeInsight demo](YouTube%20Digest%20demo.png)
+![TubeInsight interface](TubeInsight-demo.png)
 
 ## Core capabilities
 
